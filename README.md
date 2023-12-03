@@ -6,3 +6,5 @@ Network UPS Tools (NUT) for UNRAID by Rysz - https://forums.unraid.net/topic/602
 nut-influxdbv2 - https://hub.docker.com/r/jwillmer/nut-influxdbv2
 
 
+![Screenshot 2023-12-03 203413](https://github.com/masterwishx/NUT-UPS-InfluxDBv2/assets/28630321/ee9b8c8f-731f-49f9-9568-87157282808f)
+
