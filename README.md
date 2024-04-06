@@ -27,24 +27,7 @@ addd next to telegraf config:
   # username = "user"
   # password = "password"
 
-  ## Force parsing numbers as floats
-  ## It is highly recommended to enable this setting to parse numbers
-  ## consistently as floats to avoid database conflicts where some numbers are
-  ## parsed as integers and others as floats.
-  # force_float = false
-
-  ## Collect additional fields if they are available for the UPS
-  ## The fields need to be specified as NUT variable names, see
-  ## https://networkupstools.org/docs/developer-guide.chunked/apas02.html
-  ## Wildcards are accepted.
    additional_fields = ["*"]
-
-  ## Dump information for debugging
-  ## Allows to print the raw variables (and corresponding types) as received
-  ## from the NUT server ONCE for each UPS. The output is only available when
-  ## running Telegraf in debug-mode.
-  ## Please attach this information when reporting issues!
-  # dump_raw_variables = false
 
 # Map enum values according to given table.
   ## ## UPS beeper status (enabled, disabled or muted)
