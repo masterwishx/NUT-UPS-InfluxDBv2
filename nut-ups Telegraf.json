@@ -1,0 +1,2551 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_INFLUXDBV2",
+      "label": "InfluxDBv2",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.1"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "state-timeline",
+      "name": "State timeline",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "A dashboard to display data exported by NUT UPS",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "BOOST": {
+                  "color": "purple",
+                  "index": 7,
+                  "text": "SmartBoost"
+                },
+                "BYPASS": {
+                  "color": "blue",
+                  "index": 9,
+                  "text": "OnBypass"
+                },
+                "CAL": {
+                  "color": "purple",
+                  "index": 2,
+                  "text": "Calibration"
+                },
+                "CHRG": {
+                  "color": "purple",
+                  "index": 10,
+                  "text": "Charging"
+                },
+                "DISCHRG": {
+                  "color": "purple",
+                  "index": 11,
+                  "text": "Discharging"
+                },
+                "FSD OB": {
+                  "color": "dark-yellow",
+                  "index": 12,
+                  "text": "ShutDown"
+                },
+                "LB": {
+                  "color": "orange",
+                  "index": 4,
+                  "text": "LowBattery"
+                },
+                "OB": {
+                  "color": "blue",
+                  "index": 1,
+                  "text": "OnBattery"
+                },
+                "OFF": {
+                  "color": "dark-red",
+                  "index": 8,
+                  "text": "Off"
+                },
+                "OL": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "OnLine"
+                },
+                "OVER": {
+                  "color": "yellow",
+                  "index": 3,
+                  "text": "Overload"
+                },
+                "RB": {
+                  "color": "red",
+                  "index": 5,
+                  "text": "ReplaceBatt"
+                },
+                "TRIM": {
+                  "color": "purple",
+                  "index": 6,
+                  "text": "SmartTrim"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "N/A",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "string"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Status$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Status",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": false,
+              "ups_status": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "ups_status": "UPS Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.7.4.1\", driver_version_data=\"MGE HID 1.43\", host=\"475c87924867\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.7.4.1\", driver_version_data=\"MGE HID 1.43\", host=\"ce43aa86d3ec\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"475c87924867\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"ce43aa86d3ec\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
+              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
+              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Vendor ID"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "463": {
+                        "index": 0,
+                        "text": "0463"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Model"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "unknown 2000": {
+                        "index": 0,
+                        "text": "9E 2000i"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 13,
+        "x": 3,
+        "y": 0
+      },
+      "hideTimeOverride": true,
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "hide": false,
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"device_type\" or r[\"_field\"] == \"ups_type\" or r[\"_field\"] == \"driver_version\" or r[\"_field\"] == \"driver_version_data\" or r[\"_field\"] == \"ups_model\" or r[\"_field\"] == \"ups_mfr\" or r[\"_field\"] == \"ups_productid\" or r[\"_field\"] == \"ups_vendorid\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)  \r\n  |> yield(name: \"last\")\r\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "5m",
+      "title": "UPS Info",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "device_type": false,
+              "driver_version_usb": true,
+              "ups_type {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time": 2,
+              "device_type": 1,
+              "driver_version": 3,
+              "driver_version_data": 4,
+              "ups_mfr": 5,
+              "ups_model": 6,
+              "ups_productid": 7,
+              "ups_type": 0,
+              "ups_vendorid": 8
+            },
+            "renameByName": {
+              "device_type": "Device Type",
+              "driver_version": "Driver version",
+              "driver_version_data": "Driver version data",
+              "ups_mfr": "Manufacture",
+              "ups_model": "Model",
+              "ups_productid": "Product ID",
+              "ups_type": "UPS Type",
+              "ups_type {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Type",
+              "ups_vendorid": "Vendor ID"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": null
+              }
+            ]
+          },
+          "unit": "W"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Power Rating"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "VA"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Power Factor"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "unit",
+                "value": "pf"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 16,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_power\" or r[\"_field\"] == \"ups_power_nominal\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Power",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "nominal_power": 1,
+              "ups_power_nominal": 2
+            },
+            "renameByName": {
+              "Time": "",
+              "nominal_power": "Real Power Rating",
+              "ups_power_nominal": "Power Rating",
+              "ups_realpower_nominal": "Real Power Rating"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Power Factor",
+            "binary": {
+              "left": "Real Power Rating",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Power Rating"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": null
+              }
+            ]
+          },
+          "unit": "amph"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 22,
+        "y": 0
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Batt Capacity \\(Ah\\)$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_capacity\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Battery Capacity",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
+              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 270,
+          "min": 210,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 250
+              },
+              {
+                "color": "dark-red",
+                "value": 260
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 3
+      },
+      "id": 9,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Input Voltage",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 59,
+          "min": 40,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 54
+              },
+              {
+                "color": "dark-red",
+                "value": 56
+              }
+            ]
+          },
+          "unit": "hertz"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 3
+      },
+      "id": 14,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Input Frequency",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 250,
+          "min": 210,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 235
+              },
+              {
+                "color": "dark-red",
+                "value": 240
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 3
+      },
+      "id": 8,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Output Voltage",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 59,
+          "min": 40,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 54
+              },
+              {
+                "color": "dark-red",
+                "value": 56
+              }
+            ]
+          },
+          "unit": "hertz"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 3
+      },
+      "id": 10,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Output Frequency",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1600,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 1200
+              },
+              {
+                "color": "dark-red",
+                "value": 1440
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 3
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Real Power$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "UPS Load (W)",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "ups_load": false,
+              "ups_realpower_nominal": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "real_power {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Real Power",
+              "ups_load": "",
+              "ups_realpower {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Real Power",
+              "ups_realpower_nominal": "UPS Real Power",
+              "watts": "UPS Load",
+              "watts {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load",
+              "watts {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 2000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 1500
+              },
+              {
+                "color": "dark-red",
+                "value": 1800
+              }
+            ]
+          },
+          "unit": "voltamp"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 3
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Power$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "UPS Load (VA)",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "ups_load": false,
+              "ups_realpower_nominal": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "ups_load": "",
+              "ups_power {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Power",
+              "ups_power {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Power",
+              "ups_realpower_nominal": "UPS Real Power",
+              "watts": "UPS Load",
+              "watts {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load",
+              "watts {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 80
+              },
+              {
+                "color": "dark-red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 3
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Load %$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "UPS Load %",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "ups_load": false,
+              "ups_realpower_nominal": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "load_percent {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Load %",
+              "ups_load": "",
+              "ups_load {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load %",
+              "ups_load {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load %",
+              "ups_realpower_nominal": "UPS Real Power",
+              "watts": "UPS Load",
+              "watts {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 70,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 30
+              },
+              {
+                "color": "dark-red",
+                "value": 35
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 3
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Temp$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"internal_temp\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "UPS Temperature",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "internal_temp {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Temp",
+              "ups_temperature {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Temp °C",
+              "ups_temperature {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Temp"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "green",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 0,
+        "y": 7
+      },
+      "id": 12,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "manual",
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Battery Charge",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "N/A",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1500
+              },
+              {
+                "color": "green",
+                "value": 2500
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time_left_ns"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dthms"
+              },
+              {
+                "id": "displayName",
+                "value": "UPS Runtime Left"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 8,
+        "y": 7
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"time_left_ns\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: r._value / 1000000000 }))\r\n  |> yield(name: \"last\")\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Runtime",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 10,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-yellow",
+                "value": 7
+              },
+              {
+                "color": "dark-red",
+                "value": 8
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 12,
+        "y": 7
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Output Current \\(A\\)$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "Output Current",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current",
+              "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current (A)",
+              "output_current {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)",
+              "output_current {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "Aborted": {
+                  "color": "light-red",
+                  "index": 4
+                },
+                "Done and error": {
+                  "color": "red",
+                  "index": 3,
+                  "text": "Error"
+                },
+                "Done and passed": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "Done and warning": {
+                  "color": "orange",
+                  "index": 2,
+                  "text": "Warning"
+                },
+                "In progress": {
+                  "color": "blue",
+                  "index": 1,
+                  "text": "Testing ..."
+                },
+                "No test initiated": {
+                  "color": "yellow",
+                  "index": 5,
+                  "text": "No Test"
+                },
+                "Test scheduled": {
+                  "color": "purple",
+                  "index": 6,
+                  "text": "Planned"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "string"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 16,
+        "y": 7
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Test Result$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_result\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Self Test",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.7.4.1\", driver_version_data=\"MGE HID 1.43\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Test",
+              "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Result",
+              "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Result",
+              "ups_test_result {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result",
+              "ups_test_result {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 20,
+        "y": 7
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Test Interval$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_interval\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Self Test Interval",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": false
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "ups_test.interval {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Self Test Interval",
+              "ups_test.interval {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Interval",
+              "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Result",
+              "ups_test_interval {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval",
+              "ups_test_interval {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Watts"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "watt"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UPS Load"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "left"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\" or r[\"_field\"] == \"nominal_power\")  \r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: if r._field == \"nominal_power\" then r._value / 100 else r._value }))\r\n  |> yield(name: \"last\")\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Load",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "nominal_power": false,
+              "ups_power_nominal": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "_value_load_percent {_field_load_percent=\"load_percent\", _field_nominal_power=\"nominal_power\", _measurement_load_percent=\"upsd\", _measurement_nominal_power=\"upsd\", _start=\"2024-02-06 13:54:05.485 +0000 UTC\", _stop=\"2024-02-06 19:54:05.485 +0000 UTC\", host_load_percent=\"31ca91348df4\", host_nominal_power=\"31ca91348df4\", model_load_percent=\"unknown 2000\", model_nominal_power=\"unknown 2000\", serial_load_percent=\"<nil>\", serial_nominal_power=\"<nil>\", status_OL_load_percent=\"true\", status_OL_nominal_power=\"true\", ups_name_load_percent=\"Eaton9E2000i\", ups_name_nominal_power=\"Eaton9E2000i\"}": "UPS Load",
+              "_value_nominal_power {_field_load_percent=\"load_percent\", _field_nominal_power=\"nominal_power\", _measurement_load_percent=\"upsd\", _measurement_nominal_power=\"upsd\", _start=\"2024-02-06 13:54:05.485 +0000 UTC\", _stop=\"2024-02-06 19:54:05.485 +0000 UTC\", host_load_percent=\"31ca91348df4\", host_nominal_power=\"31ca91348df4\", model_load_percent=\"unknown 2000\", model_nominal_power=\"unknown 2000\", serial_load_percent=\"<nil>\", serial_nominal_power=\"<nil>\", status_OL_load_percent=\"true\", status_OL_nominal_power=\"true\", ups_name_load_percent=\"Eaton9E2000i\", ups_name_nominal_power=\"Eaton9E2000i\"}": "Real Power Rating",
+              "load_percent": "UPS Load",
+              "load_percent {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Load",
+              "nominal_power": "Real Power Rating",
+              "ups_load": "UPS Load",
+              "ups_power_nominal": "Power",
+              "watts": "Watts",
+              "watts {_field_load_percent=\"load_percent\", _field_nominal_power=\"nominal_power\", _measurement_load_percent=\"upsd\", _measurement_nominal_power=\"upsd\", _start=\"2024-02-06 13:54:05.485 +0000 UTC\", _stop=\"2024-02-06 19:54:05.485 +0000 UTC\", host_load_percent=\"31ca91348df4\", host_nominal_power=\"31ca91348df4\", model_load_percent=\"unknown 2000\", model_nominal_power=\"unknown 2000\", serial_load_percent=\"<nil>\", serial_nominal_power=\"<nil>\", status_OL_load_percent=\"true\", status_OL_nominal_power=\"true\", ups_name_load_percent=\"Eaton9E2000i\", ups_name_nominal_power=\"Eaton9E2000i\"}": "Watts"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Watts",
+            "binary": {
+              "left": "Real Power Rating",
+              "operator": "*",
+              "right": "UPS Load"
+            },
+            "index": {
+              "asPercentile": true
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Time",
+                "UPS Load",
+                "Watts"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 10,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Output Watts"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "watt"
+              },
+              {
+                "id": "max"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Output Current"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\" or r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "hide": true,
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "B"
+        }
+      ],
+      "title": "Output Load",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "output_current": false,
+              "output_voltage": false
+            },
+            "indexByName": {},
+            "renameByName": {
+              "output_current": "Output Current",
+              "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current",
+              "output_voltage": "Output Voltage",
+              "ups_load": "UPS Load",
+              "watts": "Watts"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Output Watts",
+            "binary": {
+              "left": "Output Current",
+              "operator": "*",
+              "reducer": "sum",
+              "right": "Output Voltage"
+            },
+            "mode": "binary",
+            "reduce": {
+              "include": [],
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Output Voltage": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watt",
+          "unitScale": true
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UPS Power"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "voltamp"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "left"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#009999",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UPS Real Power"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\" or r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Power",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "real_power": 2,
+              "ups_power": 1
+            },
+            "renameByName": {
+              "real_power": "UPS Real Power",
+              "ups_load": "UPS Load",
+              "ups_power": "UPS Power",
+              "ups_realpower": "UPS Real Power",
+              "watts": "Watts"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "fieldMinMax": false,
+          "mappings": [
+            {
+              "options": {
+                "FSD OB": {
+                  "color": "dark-yellow",
+                  "index": 2,
+                  "text": "ShutDown"
+                },
+                "OB": {
+                  "color": "blue",
+                  "index": 0,
+                  "text": "OnBattery"
+                },
+                "OL": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "OnLine"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 24,
+      "interval": "10s",
+      "maxDataPoints": 2000,
+      "options": {
+        "alignValue": "center",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Status Timeline",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "ups_status": "UPS Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.7.4.1\", driver_version_data=\"MGE HID 1.43\", host=\"475c87924867\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.7.4.1\", driver_version_data=\"MGE HID 1.43\", host=\"ce43aa86d3ec\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"475c87924867\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"ce43aa86d3ec\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
+              "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
+              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
+              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status"
+            }
+          }
+        }
+      ],
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 100,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "green",
+                "value": 50
+              },
+              {
+                "color": "#009999",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent",
+          "unitScale": true
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 25,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Battery Charge",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "battery_charge_percent {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Battery Charge"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "15s",
+  "schemaVersion": 39,
+  "tags": [
+    "nas server",
+    "ups",
+    "Flux",
+    "influxdbv2"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "15s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "NUT UPS Telegraf",
+  "uid": "be91afa6vvk",
+  "version": 17,
+  "weekStart": ""
+}
