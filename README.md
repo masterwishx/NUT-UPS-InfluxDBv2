@@ -10,7 +10,10 @@ nut-influxdbv2 - https://hub.docker.com/r/jwillmer/nut-influxdbv2
 
 # NUT-UPS-Telegraf-InfluxDBv2
 A dashboard to display data exported from Network UPS Tools (NUT) for UNRAID
-to InfluxDBv2 by upsd in Telegraf Avalible Now at Grafana Dashboard 17xxx
+to InfluxDBv2 by upsd in Telegraf Avalible Now at Grafana Dashboard 20846
+
+![Screenshot 2024-04-06 113839](https://github.com/masterwishx/NUT-UPS-InfluxDBv2/assets/28630321/4f36302f-c8d1-48b4-8deb-8ca3ce452811)
+
 
 addd next to telegraf config: 
 
