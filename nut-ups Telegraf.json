@@ -27,7 +27,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "10.4.1"
+      "version": "11.0.0"
     },
     {
       "type": "datasource",
@@ -81,7 +81,56 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "NUT Settings",
+      "tooltip": "",
+      "type": "link",
+      "url": "http://192.168.0.199/Settings/NUTsettings"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "NUT Support",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://forums.unraid.net/topic/60217-plugin-nut-v2-network-ups-tools/"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "GitHub",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://github.com/masterwishx/NUT-UPS-InfluxDBv2"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Grafana",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://grafana.com/grafana/dashboards/20846-nut-ups-telegraf/"
+    }
+  ],
   "liveNow": false,
   "panels": [
     {
@@ -133,7 +182,7 @@
                   "text": "LowBattery"
                 },
                 "OB": {
-                  "color": "blue",
+                  "color": "semi-dark-orange",
                   "index": 1,
                   "text": "OnBattery"
                 },
@@ -204,14 +253,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -334,7 +383,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
@@ -342,7 +391,7 @@
             "uid": "${DS_INFLUXDBV2}"
           },
           "hide": false,
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"device_type\" or r[\"_field\"] == \"ups_type\" or r[\"_field\"] == \"driver_version\" or r[\"_field\"] == \"driver_version_data\" or r[\"_field\"] == \"ups_model\" or r[\"_field\"] == \"ups_mfr\" or r[\"_field\"] == \"ups_productid\" or r[\"_field\"] == \"ups_vendorid\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)  \r\n  |> yield(name: \"last\")\r\n",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"device_type\" or r[\"_field\"] == \"ups_type\" or r[\"_field\"] == \"driver_version\" or r[\"_field\"] == \"driver_version_data\" or r[\"_field\"] == \"ups_model\" or r[\"_field\"] == \"ups_mfr\" or r[\"_field\"] == \"ups_productid\" or r[\"_field\"] == \"ups_vendorid\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)  \r\n  |> yield(name: \"last\")\r\n",
           "refId": "A"
         }
       ],
@@ -466,14 +515,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_power\" or r[\"_field\"] == \"ups_power_nominal\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_power\" or r[\"_field\"] == \"ups_power_nominal\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -568,14 +617,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_capacity\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_capacity\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -653,14 +702,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -723,14 +772,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -793,14 +842,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -863,14 +912,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -887,8 +936,8 @@
           "color": {
             "mode": "thresholds"
           },
+          "fieldMinMax": true,
           "mappings": [],
-          "max": 1600,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -930,18 +979,18 @@
           "fields": "/^UPS Real Power$/",
           "values": false
         },
-        "showPercentChange": false,
+        "showPercentChange": true,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -982,8 +1031,8 @@
           "color": {
             "mode": "thresholds"
           },
+          "fieldMinMax": true,
           "mappings": [],
-          "max": 2000,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -1025,18 +1074,18 @@
           "fields": "/^UPS Power$/",
           "values": false
         },
-        "showPercentChange": false,
+        "showPercentChange": true,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1077,8 +1126,8 @@
           "color": {
             "mode": "thresholds"
           },
+          "fieldMinMax": true,
           "mappings": [],
-          "max": 100,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -1120,18 +1169,18 @@
           "fields": "/^UPS Load %$/",
           "values": false
         },
-        "showPercentChange": false,
+        "showPercentChange": true,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1172,6 +1221,7 @@
           "color": {
             "mode": "thresholds"
           },
+          "fieldMinMax": true,
           "mappings": [],
           "max": 70,
           "min": 0,
@@ -1215,18 +1265,18 @@
           "fields": "/^UPS Temp$/",
           "values": false
         },
-        "showPercentChange": false,
+        "showPercentChange": true,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"internal_temp\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"internal_temp\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1308,14 +1358,14 @@
         "sizing": "manual",
         "valueMode": "color"
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1395,14 +1445,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"time_left_ns\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: r._value / 1000000000 }))\r\n  |> yield(name: \"last\")\r\n",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"time_left_ns\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: r._value / 1000000000 }))\r\n  |> yield(name: \"last\")\r\n",
           "refId": "A"
         }
       ],
@@ -1419,8 +1469,8 @@
           "color": {
             "mode": "thresholds"
           },
+          "fieldMinMax": true,
           "mappings": [],
-          "max": 10,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -1445,7 +1495,7 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 4,
+        "w": 3,
         "x": 12,
         "y": 7
       },
@@ -1462,18 +1512,18 @@
           "fields": "/^Output Current \\(A\\)$/",
           "values": false
         },
-        "showPercentChange": false,
+        "showPercentChange": true,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1491,6 +1541,120 @@
               "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current (A)",
               "output_current {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)",
               "output_current {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "fieldMinMax": true,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 0.3
+              },
+              {
+                "color": "dark-yellow",
+                "value": 0.4
+              },
+              {
+                "color": "dark-green",
+                "value": 0.6
+              }
+            ]
+          },
+          "unit": "pf"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 7
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Power Factor$/",
+          "values": false
+        },
+        "showPercentChange": true,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\" or r[\"_field\"] == \"ups_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "Power Factor",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current",
+              "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current (A)",
+              "output_current {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)",
+              "output_current {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)",
+              "real_power": "Real Power",
+              "ups_power": "UPS Power"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Power Factor",
+            "binary": {
+              "left": "Real Power",
+              "operator": "/",
+              "right": "UPS Power"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
             }
           }
         }
@@ -1563,8 +1727,8 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 4,
-        "x": 16,
+        "w": 3,
+        "x": 18,
         "y": 7
       },
       "id": 18,
@@ -1585,14 +1749,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_result\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_result\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1644,8 +1808,8 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 4,
-        "x": 20,
+        "w": 3,
+        "x": 21,
         "y": 7
       },
       "id": 21,
@@ -1666,14 +1830,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.1",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_interval\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_interval\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1834,6 +1998,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -1844,7 +2009,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\" or r[\"_field\"] == \"nominal_power\")  \r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: if r._field == \"nominal_power\" then r._value / 100 else r._value }))\r\n  |> yield(name: \"last\")\r\n",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\" or r[\"_field\"] == \"nominal_power\")  \r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: if r._field == \"nominal_power\" then r._value / 100 else r._value }))\r\n  |> yield(name: \"last\")\r\n",
           "refId": "A"
         }
       ],
@@ -2034,6 +2199,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -2044,7 +2210,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\" or r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\" or r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         },
         {
@@ -2053,7 +2219,7 @@
             "uid": "${DS_INFLUXDBV2}"
           },
           "hide": true,
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\")\r\n  |> drop(columns: [\"host\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "B"
         }
       ],
@@ -2170,8 +2336,7 @@
               }
             ]
           },
-          "unit": "watt",
-          "unitScale": true
+          "unit": "watt"
         },
         "overrides": [
           {
@@ -2241,6 +2406,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -2251,7 +2417,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\" or r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\" or r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2314,7 +2480,7 @@
                   "text": "ShutDown"
                 },
                 "OB": {
-                  "color": "blue",
+                  "color": "semi-dark-orange",
                   "index": 0,
                   "text": "OnBattery"
                 },
@@ -2334,8 +2500,7 @@
                 "color": "green"
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -2359,6 +2524,7 @@
         "rowHeight": 0.9,
         "showValue": "auto",
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -2370,7 +2536,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2461,8 +2627,7 @@
               }
             ]
           },
-          "unit": "percent",
-          "unitScale": true
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -2481,6 +2646,7 @@
           "showLegend": false
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -2492,7 +2658,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"upsd-Telegraf\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2522,12 +2688,38 @@
     "influxdbv2"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "upsd-Telegraf",
+          "value": "upsd-Telegraf"
+        },
+        "description": "InfluxDBv2 bucket",
+        "hide": 0,
+        "includeAll": false,
+        "label": "NUT UPS Telegraf",
+        "multi": false,
+        "name": "bucket",
+        "options": [
+          {
+            "selected": true,
+            "text": "upsd-Telegraf",
+            "value": "upsd-Telegraf"
+          }
+        ],
+        "query": "upsd-Telegraf",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
   },
   "time": {
     "from": "now-6h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
     "refresh_intervals": [
       "5s",
@@ -2546,6 +2738,6 @@
   "timezone": "",
   "title": "NUT UPS Telegraf",
   "uid": "be91afa6vvk",
-  "version": 17,
+  "version": 25,
   "weekStart": ""
 }
