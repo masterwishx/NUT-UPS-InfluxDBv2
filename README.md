@@ -14,6 +14,13 @@ to InfluxDBv2 by upsd in Telegraf Avalible Now at Grafana Dashboard 20846
 
 ![Screenshot 2024-04-06 113839](https://github.com/masterwishx/NUT-UPS-InfluxDBv2/assets/28630321/4f36302f-c8d1-48b4-8deb-8ca3ce452811)
 
+``` 28.5.24 - Added Multi bucket support. ```<br>
+
+ You can change bucket name and add multiple buckets by : 
+
+ <b>Go to Dashboard Setting - Variables - Click on bucket - Custom options:</b>
+
+ ![image](https://github.com/masterwishx/NUT-UPS-InfluxDBv2/assets/28630321/a64a24e6-1be5-46d4-b0c1-7ea6b2da0716)
 
 addd next to telegraf config: 
 
