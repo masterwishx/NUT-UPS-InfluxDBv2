@@ -12,10 +12,10 @@ nut-influxdbv2 - https://hub.docker.com/r/jwillmer/nut-influxdbv2
 A dashboard to display data exported from Network UPS Tools (NUT) for UNRAID
 to InfluxDBv2 by upsd in Telegraf Avalible Now at Grafana Dashboard 20846
 
-![Screenshot 2024-04-06 113839](https://github.com/masterwishx/NUT-UPS-InfluxDBv2/assets/28630321/4f36302f-c8d1-48b4-8deb-8ca3ce452811)
 ![Screenshot 2024-08-14 201158](https://github.com/user-attachments/assets/dcb666fa-579b-4814-a148-4ca9bbc498f2)
 
 
+``` 14.8.24 - Added Some more Info + some Fixes. ```<br>
 ``` 28.5.24 - Added Multi bucket support. ```<br>
 
  You can change bucket name and add multiple buckets by : 
