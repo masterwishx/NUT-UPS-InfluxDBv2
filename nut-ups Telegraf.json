@@ -27,7 +27,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "11.0.0"
+      "version": "11.1.3"
     },
     {
       "type": "datasource",
@@ -134,6 +134,19 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 27,
+      "panels": [],
+      "title": "Quick UPS Info",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
@@ -176,6 +189,11 @@
                   "index": 12,
                   "text": "ShutDown"
                 },
+                "FSD OL": {
+                  "color": "dark-yellow",
+                  "index": 16,
+                  "text": "OnShutDown"
+                },
                 "LB": {
                   "color": "orange",
                   "index": 4,
@@ -189,17 +207,32 @@
                 "OFF": {
                   "color": "dark-red",
                   "index": 8,
-                  "text": "Off"
+                  "text": "   Off    "
                 },
                 "OL": {
                   "color": "green",
                   "index": 0,
-                  "text": "OnLine"
+                  "text": "  OnLine  "
+                },
+                "OL BYPASS": {
+                  "color": "semi-dark-blue",
+                  "index": 13,
+                  "text": "OnECO"
+                },
+                "OL CHRG": {
+                  "color": "dark-green",
+                  "index": 14,
+                  "text": "OnCharging"
                 },
                 "OVER": {
                   "color": "yellow",
                   "index": 3,
                   "text": "Overload"
+                },
+                "OVER BYPASS": {
+                  "color": "super-light-yellow",
+                  "index": 15,
+                  "text": "OverBypass"
                 },
                 "RB": {
                   "color": "red",
@@ -233,14 +266,15 @@
         "h": 3,
         "w": 3,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 4,
       "options": {
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -253,19 +287,23 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])  \r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "UPS Status",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -282,8 +320,10 @@
               "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"475c87924867\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
               "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"ce43aa86d3ec\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
               "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
+              "ups_status {model=\"9E2000 (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
               "ups_status {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
-              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status"
+              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
+              "ups_status {serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status"
             }
           }
         }
@@ -345,6 +385,10 @@
                 "value": [
                   {
                     "options": {
+                      "9E2000i (presumed)": {
+                        "index": 1,
+                        "text": "9E 2000i"
+                      },
                       "unknown 2000": {
                         "index": 0,
                         "text": "9E 2000i"
@@ -362,15 +406,16 @@
         "h": 3,
         "w": 13,
         "x": 3,
-        "y": 0
+        "y": 1
       },
       "hideTimeOverride": true,
       "id": 7,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -383,7 +428,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
@@ -496,7 +541,7 @@
         "h": 3,
         "w": 6,
         "x": 16,
-        "y": 0
+        "y": 1
       },
       "id": 6,
       "options": {
@@ -504,6 +549,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "vertical",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -515,7 +561,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
@@ -598,7 +644,7 @@
         "h": 3,
         "w": 2,
         "x": 22,
-        "y": 0
+        "y": 1
       },
       "id": 17,
       "options": {
@@ -606,6 +652,7 @@
         "graphMode": "none",
         "justifyMode": "center",
         "orientation": "vertical",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -617,19 +664,23 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_capacity\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_capacity\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "Battery Capacity",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -637,9 +688,12 @@
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
+              "battery_capacity": "Batt Capacity (Ah)",
               "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
               "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
-              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)"
+              "battery_capacity {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
+              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
+              "battery_capacity {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)"
             }
           }
         }
@@ -684,7 +738,7 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 3
+        "y": 4
       },
       "id": 9,
       "options": {
@@ -702,18 +756,24 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "Input Voltage",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "gauge"
     },
     {
@@ -754,7 +814,7 @@
         "h": 4,
         "w": 3,
         "x": 3,
-        "y": 3
+        "y": 4
       },
       "id": 14,
       "options": {
@@ -772,18 +832,24 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "Input Frequency",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "gauge"
     },
     {
@@ -824,7 +890,7 @@
         "h": 4,
         "w": 3,
         "x": 6,
-        "y": 3
+        "y": 4
       },
       "id": 8,
       "options": {
@@ -842,18 +908,24 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "Output Voltage",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "gauge"
     },
     {
@@ -894,7 +966,7 @@
         "h": 4,
         "w": 3,
         "x": 9,
-        "y": 3
+        "y": 4
       },
       "id": 10,
       "options": {
@@ -912,18 +984,24 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "Output Frequency",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "gauge"
     },
     {
@@ -936,11 +1014,11 @@
           "color": {
             "mode": "thresholds"
           },
-          "fieldMinMax": true,
+          "fieldMinMax": false,
           "mappings": [],
           "min": 0,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "dark-green",
@@ -948,11 +1026,11 @@
               },
               {
                 "color": "dark-yellow",
-                "value": 1200
+                "value": 75
               },
               {
                 "color": "dark-red",
-                "value": 1440
+                "value": 90
               }
             ]
           },
@@ -964,7 +1042,7 @@
         "h": 4,
         "w": 3,
         "x": 12,
-        "y": 3
+        "y": 4
       },
       "id": 13,
       "options": {
@@ -972,6 +1050,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -983,20 +1062,24 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\" or r[\"_field\"] == \"nominal_power\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "timeFrom": "1d",
       "title": "UPS Load (W)",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -1008,6 +1091,8 @@
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
+              "nominal_power": "Real Power Rating",
+              "real_power": "UPS Real Power",
               "real_power {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Real Power",
               "ups_load": "",
               "ups_realpower {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Real Power",
@@ -1031,11 +1116,11 @@
           "color": {
             "mode": "thresholds"
           },
-          "fieldMinMax": true,
+          "fieldMinMax": false,
           "mappings": [],
           "min": 0,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "dark-green",
@@ -1043,11 +1128,11 @@
               },
               {
                 "color": "dark-yellow",
-                "value": 1500
+                "value": 75
               },
               {
                 "color": "dark-red",
-                "value": 1800
+                "value": 90
               }
             ]
           },
@@ -1059,7 +1144,7 @@
         "h": 4,
         "w": 3,
         "x": 15,
-        "y": 3
+        "y": 4
       },
       "id": 23,
       "options": {
@@ -1067,6 +1152,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1078,20 +1164,24 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\" or r[\"_field\"] == \"ups_power_nominal\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "timeFrom": "1d",
       "title": "UPS Load (VA)",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -1101,11 +1191,17 @@
               "ups_realpower_nominal": false
             },
             "includeByName": {},
-            "indexByName": {},
+            "indexByName": {
+              "Time": 0,
+              "ups_power": 2,
+              "ups_power_nominal": 1
+            },
             "renameByName": {
               "ups_load": "",
+              "ups_power": "UPS Power",
               "ups_power {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Power",
               "ups_power {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Power",
+              "ups_power_nominal": "Power Rating",
               "ups_realpower_nominal": "UPS Real Power",
               "watts": "UPS Load",
               "watts {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load",
@@ -1128,6 +1224,7 @@
           },
           "fieldMinMax": true,
           "mappings": [],
+          "max": 110,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -1154,7 +1251,7 @@
         "h": 4,
         "w": 3,
         "x": 18,
-        "y": 3
+        "y": 4
       },
       "id": 16,
       "options": {
@@ -1162,6 +1259,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1173,14 +1271,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1199,6 +1297,7 @@
             "indexByName": {},
             "renameByName": {
               "load_percent {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Load %",
+              "load_percent {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Load %",
               "ups_load": "",
               "ups_load {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load %",
               "ups_load {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Load %",
@@ -1223,10 +1322,10 @@
           },
           "fieldMinMax": true,
           "mappings": [],
-          "max": 70,
+          "max": 100,
           "min": 0,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "dark-green",
@@ -1238,7 +1337,7 @@
               },
               {
                 "color": "dark-red",
-                "value": 35
+                "value": 40
               }
             ]
           },
@@ -1250,7 +1349,7 @@
         "h": 4,
         "w": 3,
         "x": 21,
-        "y": 3
+        "y": 4
       },
       "id": 11,
       "options": {
@@ -1258,6 +1357,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1269,14 +1369,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"internal_temp\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"internal_temp\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1291,6 +1391,7 @@
             "indexByName": {},
             "renameByName": {
               "internal_temp {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Temp",
+              "internal_temp {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Temp",
               "ups_temperature {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Temp °C",
               "ups_temperature {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Temp"
             }
@@ -1337,7 +1438,7 @@
         "h": 3,
         "w": 8,
         "x": 0,
-        "y": 7
+        "y": 8
       },
       "id": 12,
       "options": {
@@ -1358,18 +1459,24 @@
         "sizing": "manual",
         "valueMode": "color"
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "UPS Battery Charge",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "bargauge"
     },
     {
@@ -1426,7 +1533,7 @@
         "h": 3,
         "w": 4,
         "x": 8,
-        "y": 7
+        "y": 8
       },
       "id": 15,
       "options": {
@@ -1434,6 +1541,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1445,18 +1553,24 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"time_left_ns\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: r._value / 1000000000 }))\r\n  |> yield(name: \"last\")\r\n",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"time_left_ns\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: r._value / 1000000000 }))\r\n  |> yield(name: \"last\")\r\n",
           "refId": "A"
         }
       ],
       "title": "UPS Runtime",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
       "type": "stat"
     },
     {
@@ -1469,11 +1583,11 @@
           "color": {
             "mode": "thresholds"
           },
-          "fieldMinMax": true,
+          "fieldMinMax": false,
           "mappings": [],
           "min": 0,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "dark-green",
@@ -1481,11 +1595,11 @@
               },
               {
                 "color": "dark-yellow",
-                "value": 7
+                "value": 75
               },
               {
                 "color": "dark-red",
-                "value": 8
+                "value": 90
               }
             ]
           },
@@ -1494,10 +1608,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 4,
         "w": 3,
         "x": 12,
-        "y": 7
+        "y": 8
       },
       "id": 19,
       "options": {
@@ -1505,25 +1619,26 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^Output Current \\(A\\)$/",
+          "fields": "/^Output Current$/",
           "values": false
         },
         "showPercentChange": true,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\" or r[\"_field\"] == \"output_voltage\" or r[\"_field\"] == \"ups_power_nominal\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1531,17 +1646,63 @@
       "title": "Output Current",
       "transformations": [
         {
+          "id": "merge",
+          "options": {}
+        },
+        {
           "id": "organize",
           "options": {
             "excludeByName": {},
             "includeByName": {},
-            "indexByName": {},
+            "indexByName": {
+              "Time": 0,
+              "output_current": 3,
+              "output_voltage": 1,
+              "ups_power_nominal": 2
+            },
             "renameByName": {
+              "output_current": "Output Current",
               "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current",
               "output_current {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Output Current (A)",
               "output_current {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)",
-              "output_current {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)"
+              "output_current {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "Output Current (A)",
+              "output_voltage": "Output Voltage",
+              "ups_power_nominal": "Power Rating"
             }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Max Output Current",
+            "binary": {
+              "left": "Power Rating",
+              "operator": "/",
+              "right": "Output Voltage"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Output Voltage": true,
+              "Power Rating": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Max Output Current": 3,
+              "Output Current": 4,
+              "Output Voltage": 1,
+              "Power Rating": 2,
+              "Time": 0
+            },
+            "renameByName": {}
           }
         }
       ],
@@ -1560,6 +1721,7 @@
           "decimals": 2,
           "fieldMinMax": true,
           "mappings": [],
+          "max": 2,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -1587,10 +1749,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 4,
         "w": 3,
         "x": 15,
-        "y": 7
+        "y": 8
       },
       "id": 26,
       "options": {
@@ -1598,6 +1760,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1609,14 +1772,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\" or r[\"_field\"] == \"ups_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"real_power\" or r[\"_field\"] == \"ups_power\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1666,6 +1829,94 @@
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
       },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": null
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 8
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Battery Voltage$/",
+          "values": false
+        },
+        "showPercentChange": true,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "Battery Voltage",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
+              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
+              "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
+              "battery_type {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Type",
+              "battery_voltage": "Battery Voltage",
+              "battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage",
+              "battery_voltage {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1686,7 +1937,7 @@
                 "Done and passed": {
                   "color": "green",
                   "index": 0,
-                  "text": "OK"
+                  "text": "  OK  "
                 },
                 "Done and warning": {
                   "color": "orange",
@@ -1728,15 +1979,16 @@
       "gridPos": {
         "h": 3,
         "w": 3,
-        "x": 18,
-        "y": 7
+        "x": 21,
+        "y": 8
       },
       "id": 18,
       "options": {
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1749,19 +2001,23 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_result\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_result\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "Self Test",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -1774,8 +2030,389 @@
               "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.7.4.1\", driver_version_data=\"MGE HID 1.43\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Test",
               "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Result",
               "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Result",
+              "ups_test_result": "UPS Test Result",
+              "ups_test_result {model=\"9E2000 (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result",
+              "ups_test_result {model=\"9E2000i (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result",
               "ups_test_result {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result",
-              "ups_test_result {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result"
+              "ups_test_result {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result",
+              "ups_test_result {serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Result"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 0,
+        "y": 11
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_high\" or r[\"_field\"] == \"input_transfer_low\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Input Transfer Voltage",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "input_transfer_high": 2,
+              "input_transfer_low": 1
+            },
+            "renameByName": {
+              "input_transfer_high": "High",
+              "input_transfer_low": "Low"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "description": "Deep discharge protection",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "no": {
+                  "color": "purple",
+                  "index": 1,
+                  "text": "  No  "
+                },
+                "yes": {
+                  "color": "#009999",
+                  "index": 0,
+                  "text": "  Yes  "
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": null
+              }
+            ]
+          },
+          "unit": "amph"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 5,
+        "y": 11
+      },
+      "id": 29,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Batt Protected$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_protection\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Battery Protection",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
+              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
+              "battery_protection": "Batt Protected",
+              "battery_protection {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
+              "battery_protection {model=\"9E2000i (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "",
+              "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
+              "battery_protection {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "description": "Battery chemistry",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "index": 0,
+                  "text": " PbAc "
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": null
+              }
+            ]
+          },
+          "unit": "amph"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 7,
+        "y": 11
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Battery Type$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_type\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Battery Type",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
+              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
+              "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
+              "battery_type": "Battery Type",
+              "battery_type {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Type"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "index": 0,
+                  "text": "72v"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": null
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 10,
+        "y": 11
+      },
+      "id": 33,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Battery Voltage Nominal$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_battery_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Battery Voltage Nominal",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
+              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
+              "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
+              "battery_type {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Type",
+              "battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "nominal_battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "nominal_battery_voltage {model=\"9E2000i (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "",
+              "nominal_battery_voltage {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal"
             }
           }
         }
@@ -1810,7 +2447,7 @@
         "h": 3,
         "w": 3,
         "x": 21,
-        "y": 7
+        "y": 11
       },
       "id": 21,
       "options": {
@@ -1818,6 +2455,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1830,19 +2468,23 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.1.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_interval\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_interval\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "Self Test Interval",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -1855,13 +2497,131 @@
               "ups_test.interval {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Self Test Interval",
               "ups_test.interval {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Interval",
               "ups_test.result {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Test Result",
+              "ups_test_interval": "UPS Test Interval",
+              "ups_test_interval {model=\"9E2000 (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval",
+              "ups_test_interval {model=\"9E2000i (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval",
               "ups_test_interval {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval",
-              "ups_test_interval {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval"
+              "ups_test_interval {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval",
+              "ups_test_interval {serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Test Interval"
             }
           }
         }
       ],
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "description": "Disable UPS Power after Shutdown",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "yellow",
+                  "index": 1,
+                  "text": "Disabled"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Enabled"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": null
+              }
+            ]
+          },
+          "unit": "string"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 3,
+        "x": 12,
+        "y": 12
+      },
+      "id": 34,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^UPS Shutdown$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_shutdown\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Shutdown",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
+              "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
+              "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
+              "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
+              "battery_type {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Type",
+              "battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "nominal_battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "nominal_battery_voltage {model=\"9E2000i (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "",
+              "nominal_battery_voltage {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "ups_shutdown {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Shutdown"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 28,
+      "panels": [],
+      "title": "Basic UPS Info",
+      "type": "row"
     },
     {
       "datasource": {
@@ -1982,7 +2742,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 15
       },
       "id": 5,
       "options": {
@@ -2009,7 +2769,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\" or r[\"_field\"] == \"nominal_power\")  \r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: if r._field == \"nominal_power\" then r._value / 100 else r._value }))\r\n  |> yield(name: \"last\")\r\n",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\" or r[\"_field\"] == \"nominal_power\")  \r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: if r._field == \"nominal_power\" then r._value / 100 else r._value }))\r\n  |> yield(name: \"last\")\r\n",
           "refId": "A"
         }
       ],
@@ -2183,7 +2943,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 15
       },
       "id": 20,
       "options": {
@@ -2210,7 +2970,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\" or r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_current\" or r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         },
         {
@@ -2390,7 +3150,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 24
       },
       "id": 22,
       "options": {
@@ -2417,7 +3177,7 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\" or r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_power\" or r[\"_field\"] == \"real_power\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2479,6 +3239,11 @@
                   "index": 2,
                   "text": "ShutDown"
                 },
+                "FSD OL": {
+                  "color": "dark-yellow",
+                  "index": 3,
+                  "text": "OnShutDown"
+                },
                 "OB": {
                   "color": "semi-dark-orange",
                   "index": 0,
@@ -2508,7 +3273,7 @@
         "h": 5,
         "w": 12,
         "x": 12,
-        "y": 19
+        "y": 24
       },
       "id": 24,
       "interval": "10s",
@@ -2522,7 +3287,7 @@
         },
         "mergeValues": true,
         "rowHeight": 0.9,
-        "showValue": "auto",
+        "showValue": "always",
         "tooltip": {
           "maxHeight": 600,
           "mode": "single",
@@ -2536,16 +3301,23 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "UPS Status Timeline",
       "transformations": [
         {
+          "id": "merge",
+          "options": {}
+        },
+        {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": false,
+              "ups_status": false
+            },
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
@@ -2555,8 +3327,11 @@
               "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"475c87924867\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
               "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", host=\"ce43aa86d3ec\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Status",
               "ups_status {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "UPS Status",
+              "ups_status {model=\"9E2000 (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
+              "ups_status {model=\"9E2000i (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
               "ups_status {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
-              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status"
+              "ups_status {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status",
+              "ups_status {serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Status"
             }
           }
         }
@@ -2635,7 +3410,7 @@
         "h": 4,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 29
       },
       "id": 25,
       "options": {
@@ -2658,12 +3433,16 @@
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
       "title": "UPS Battery Charge",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
@@ -2671,7 +3450,11 @@
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
-              "battery_charge_percent {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Battery Charge"
+              "battery_charge_percent": "UPS Battery Charge",
+              "battery_charge_percent {model=\"9E2000 (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Battery Charge",
+              "battery_charge_percent {model=\"9E2000i (presumed)\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Battery Charge",
+              "battery_charge_percent {model=\"unknown 2000\", serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Battery Charge",
+              "battery_charge_percent {serial=\"<nil>\", ups_name=\"Eaton9E2000i\"}": "UPS Battery Charge"
             }
           }
         }
@@ -2719,7 +3502,6 @@
     "from": "now-6h",
     "to": "now"
   },
-  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
     "refresh_intervals": [
       "5s",
@@ -2738,6 +3520,6 @@
   "timezone": "",
   "title": "NUT UPS Telegraf",
   "uid": "be91afa6vvk",
-  "version": 25,
+  "version": 68,
   "weekStart": ""
 }
