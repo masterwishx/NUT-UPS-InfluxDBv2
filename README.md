@@ -6,9 +6,12 @@ to InfluxDBv2 by upsd in Telegraf Avalible Now at Grafana Dashboard 20846
 ![Screenshot 2024-09-27 211641](https://github.com/user-attachments/assets/2b088b64-fd0d-42ad-9443-2496f1c1daa9)
 ![Screenshot 2024-09-27 211653](https://github.com/user-attachments/assets/c9f9da93-95ce-44a9-97f7-0da92f178b29)
 
+## Updates
 ``` 27.9.24 - Added Power Consumption - Costs UPS info panels. ```<br>
 ``` 14.8.24 - Added Some more Info + some Fixes. ```<br>
 ``` 28.5.24 - Added Multi bucket support. ```<br>
+
+## Steps
 
  You can change bucket name and add multiple buckets by : 
 
