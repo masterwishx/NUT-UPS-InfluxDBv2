@@ -2,9 +2,11 @@
 A dashboard to display data exported from Network UPS Tools (NUT) for UNRAID
 to InfluxDBv2 by upsd in Telegraf Avalible Now at Grafana Dashboard 20846
 
-![Screenshot 2024-08-14 201158](https://github.com/user-attachments/assets/dcb666fa-579b-4814-a148-4ca9bbc498f2)
+![Screenshot 2024-09-27 210635-2](https://github.com/user-attachments/assets/e7c55917-1e56-4024-85bc-dd79294c0968)
+![Screenshot 2024-09-27 211641](https://github.com/user-attachments/assets/2b088b64-fd0d-42ad-9443-2496f1c1daa9)
+![Screenshot 2024-09-27 211653](https://github.com/user-attachments/assets/c9f9da93-95ce-44a9-97f7-0da92f178b29)
 
-
+``` 27.9.24 - Added Power Consumption - Costs UPS info panels. ```<br>
 ``` 14.8.24 - Added Some more Info + some Fixes. ```<br>
 ``` 28.5.24 - Added Multi bucket support. ```<br>
 
