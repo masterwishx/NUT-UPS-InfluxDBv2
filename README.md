@@ -21,11 +21,25 @@ A comprehensive dashboard for visualizing data exported from Network UPS Tools (
 <img width="2535" height="858" alt="Screenshot 2025-08-31 223204" src="https://github.com/user-attachments/assets/1e3de1db-77eb-4212-971a-44ad6e43015e" />
 
 ### Updates
-- **31.8.25** - ``` Added more variables for Advanced UPS Info, Input/Output gauges now have symmetric thresholds with descriptions. Added Input/Output Voltage and Frequency Time Series panels with thresholds. Updated mapping values to use regex and more several fixes. ```<br>
-- **17.3.25** - ``` Optimized static stat panels to show only the last values + some Fixes. ```<br>
-- **27.9.24** - ``` Added Power Consumption - Costs UPS info panels. ```<br>
-- **14.8.24** - ``` Added Some more Info + some Fixes. ```<br>
-- **28.5.24** - ``` Added Multi bucket support. ```<br>
+
+- **31.08.2025**  
+  - Added more variables for **Advanced UPS Info**.  
+  - Input/Output gauges now have **symmetric thresholds** with descriptions.  
+  - Added **Input/Output Voltage** and **Frequency Time Series panels** with thresholds.  
+  - Updated mapping values to use **regex** + several fixes.  
+
+- **17.03.2025**  
+  - Optimized **static stat panels** to show only the **last values**.  
+  - General fixes.  
+
+- **27.09.2024**  
+  - Added **Power Consumption – Costs UPS info panels**.  
+
+- **14.08.2024**  
+  - Added more info + fixes.  
+
+- **28.05.2024**  
+  - Added **multi-bucket support**.  
 
 ### Steps
 
