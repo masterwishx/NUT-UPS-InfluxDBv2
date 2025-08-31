@@ -15,9 +15,12 @@ A comprehensive dashboard for visualizing data exported from Network UPS Tools (
 
 ### Grafana Dashboard ID: **[20846](https://grafana.com/grafana/dashboards/20846-nut-ups-telegraf/)**
 
-![Screenshot 2024-09-27 210635-2](https://github.com/user-attachments/assets/e7c55917-1e56-4024-85bc-dd79294c0968)
-![Screenshot 2024-09-27 211641](https://github.com/user-attachments/assets/2b088b64-fd0d-42ad-9443-2496f1c1daa9)
-![Screenshot 2024-09-27 211653](https://github.com/user-attachments/assets/c9f9da93-95ce-44a9-97f7-0da92f178b29)
+<img width="2523" height="972" alt="Screenshot 2025-08-31 223538" src="https://github.com/user-attachments/assets/375366cb-0bf0-4a47-a4b3-a6273783678b" />
+<img width="2522" height="1145" alt="Screenshot 2025-08-31 222731" src="https://github.com/user-attachments/assets/b52291f3-d0b1-4202-a126-758b28a85738" />
+<img width="2530" height="904" alt="Screenshot 2025-08-31 223156" src="https://github.com/user-attachments/assets/9571e225-a49f-409f-b63b-71969f2078ac" />
+<img width="2535" height="858" alt="Screenshot 2025-08-31 223204" src="https://github.com/user-attachments/assets/1e3de1db-77eb-4212-971a-44ad6e43015e" />
+
+
 
 ### Updates
 - **17.3.25** - ``` Optimized static stat panels to show only the last values + some Fixes. ```<br>
