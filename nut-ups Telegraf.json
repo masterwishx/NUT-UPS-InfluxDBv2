@@ -33,7 +33,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "11.5.2"
+      "version": "12.1.1"
     },
     {
       "type": "datasource",
@@ -166,87 +166,52 @@
               "options": {
                 "ALARM OB ECO": {
                   "color": "semi-dark-orange",
-                  "index": 25,
+                  "index": 15,
                   "text": "OnBatteryECO"
-                },
-                "ALARM OL BYPASS": {
-                  "color": "blue",
-                  "index": 17,
-                  "text": "OnBypass"
-                },
-                "ALARM OL ECO": {
-                  "color": "dark-blue",
-                  "index": 24,
-                  "text": "  OnECO  "
                 },
                 "BOOST": {
                   "color": "purple",
-                  "index": 9,
+                  "index": 7,
                   "text": "SmartBoost"
-                },
-                "BYPASS": {
-                  "color": "blue",
-                  "index": 11,
-                  "text": "OnBypass"
                 },
                 "CAL": {
                   "color": "purple",
-                  "index": 4,
+                  "index": 2,
                   "text": "Calibration"
                 },
                 "CHRG": {
                   "color": "purple",
-                  "index": 12,
+                  "index": 9,
                   "text": "Charging"
                 },
                 "DISCHRG": {
                   "color": "purple",
-                  "index": 13,
+                  "index": 10,
                   "text": "Discharging"
                 },
-                "ECO": {
-                  "color": "dark-blue",
-                  "index": 22,
-                  "text": "  OnECO  "
-                },
-                "FSD OB": {
+                "FSD OB DISCHRG": {
                   "color": "dark-yellow",
-                  "index": 14,
-                  "text": "ShutDownBatt"
-                },
-                "FSD OB ECO": {
-                  "color": "dark-yellow",
-                  "index": 15,
-                  "text": "ShutDownBattECO"
+                  "index": 11,
+                  "text": "ShutDownBattDischarge"
                 },
                 "FSD OL": {
                   "color": "dark-yellow",
-                  "index": 21,
-                  "text": "OnShutDown"
+                  "index": 14,
+                  "text": "ShutDownOn"
+                },
+                "FSD OL CHRG": {
+                  "color": "dark-yellow",
+                  "index": 12,
+                  "text": "ShutDownOnCharge"
                 },
                 "LB": {
                   "color": "orange",
-                  "index": 6,
+                  "index": 4,
                   "text": "LowBattery"
-                },
-                "OB": {
-                  "color": "semi-dark-orange",
-                  "index": 1,
-                  "text": "OnBattery"
-                },
-                "OB DISCHRG ECO": {
-                  "color": "semi-dark-orange",
-                  "index": 3,
-                  "text": "OnBattDischargeECO"
-                },
-                "OB ECO": {
-                  "color": "semi-dark-orange",
-                  "index": 2,
-                  "text": "OnBatteryECO"
                 },
                 "OFF": {
                   "color": "dark-red",
-                  "index": 10,
+                  "index": 8,
                   "text": "   Off    "
                 },
                 "OL": {
@@ -254,48 +219,99 @@
                   "index": 0,
                   "text": "  OnLine  "
                 },
-                "OL BYPASS": {
-                  "color": "blue",
-                  "index": 16,
-                  "text": "OnBypass"
-                },
-                "OL CHRG": {
-                  "color": "dark-green",
-                  "index": 18,
-                  "text": "OnCharging"
-                },
-                "OL CHRG ECO": {
-                  "color": "dark-green",
-                  "index": 19,
-                  "text": "OnChargeECO"
-                },
-                "OL ECO": {
-                  "color": "dark-blue",
-                  "index": 23,
-                  "text": "  OnECO  "
+                "OL DISCHRG": {
+                  "color": "super-light-purple",
+                  "index": 1,
+                  "text": "OnDischarge"
                 },
                 "OVER": {
                   "color": "yellow",
-                  "index": 5,
+                  "index": 3,
                   "text": "Overload"
                 },
                 "OVER BYPASS": {
                   "color": "super-light-yellow",
-                  "index": 20,
+                  "index": 13,
                   "text": "OverBypass"
                 },
                 "RB": {
                   "color": "red",
-                  "index": 7,
+                  "index": 5,
                   "text": "ReplaceBatt"
                 },
                 "TRIM": {
                   "color": "purple",
-                  "index": 8,
+                  "index": 6,
                   "text": "SmartTrim"
                 }
               },
               "type": "value"
+            },
+            {
+              "options": {
+                "pattern": "^(ECO|OL ECO|ALARM OL ECO)$",
+                "result": {
+                  "color": "dark-blue",
+                  "index": 16,
+                  "text": "  OnECO  "
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^FSD OB(?: (ECO))?$",
+                "result": {
+                  "color": "dark-yellow",
+                  "index": 17,
+                  "text": "ShutDownBatt$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^OB(?: (ECO))?$",
+                "result": {
+                  "color": "semi-dark-orange",
+                  "index": 18,
+                  "text": "OnBattery$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^OB DISCHRG(?: (ECO))?$",
+                "result": {
+                  "color": "semi-dark-orange",
+                  "index": 19,
+                  "text": "OnBattDischarge$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": ".*BYPASS.*",
+                "result": {
+                  "color": "blue",
+                  "index": 20,
+                  "text": "OnBypass"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^OL CHRG(?: (ECO))?$",
+                "result": {
+                  "color": "dark-green",
+                  "index": 21,
+                  "text": "OnCharge$1"
+                }
+              },
+              "type": "regex"
             }
           ],
           "noValue": "N/A",
@@ -304,7 +320,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -340,14 +356,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")  \r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")  \r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_status\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -402,7 +418,7 @@
             "steps": [
               {
                 "color": "semi-dark-blue",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -441,20 +457,13 @@
                 "value": [
                   {
                     "options": {
-                      "9E2000i": {
-                        "index": 2,
-                        "text": "9E 2000i"
-                      },
-                      "9E2000i (presumed)": {
-                        "index": 1,
-                        "text": "9E 2000i"
-                      },
-                      "unknown 2000": {
+                      "pattern": "^([59](?:E|SX|PX?|SC))(\\d+[a-z]*)",
+                      "result": {
                         "index": 0,
-                        "text": "9E 2000i"
+                        "text": "$1 $2"
                       }
                     },
-                    "type": "value"
+                    "type": "regex"
                   }
                 ]
               }
@@ -471,12 +480,36 @@
                 "value": [
                   {
                     "options": {
-                      "EATON": {
+                      "pattern": "^EATON.*",
+                      "result": {
                         "index": 0,
                         "text": "Eaton"
                       }
                     },
-                    "type": "value"
+                    "type": "regex"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Driver version"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "(\\d+\\.\\d+\\.\\d+)\\.\\d+.*",
+                      "result": {
+                        "index": 0,
+                        "text": "$1"
+                      }
+                    },
+                    "type": "regex"
                   }
                 ]
               }
@@ -509,7 +542,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -517,7 +550,7 @@
             "uid": "${DS_INFLUXDBV2}"
           },
           "hide": false,
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"device_type\" or r[\"_field\"] == \"ups_type\" or r[\"_field\"] == \"driver_version\" or r[\"_field\"] == \"driver_version_data\" or r[\"_field\"] == \"ups_model\" or r[\"_field\"] == \"ups_mfr\" or r[\"_field\"] == \"ups_productid\" or r[\"_field\"] == \"ups_vendorid\" or r[\"_field\"] == \"ups_serial\" or r[\"_field\"] == \"firmware\")\r\n  |> drop(columns: [\"host\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")\r\n",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"device_type\" or r[\"_field\"] == \"ups_type\" or r[\"_field\"] == \"driver_version\" or r[\"_field\"] == \"driver_version_data\" or r[\"_field\"] == \"ups_model\" or r[\"_field\"] == \"ups_mfr\" or r[\"_field\"] == \"ups_productid\" or r[\"_field\"] == \"ups_vendorid\" or r[\"_field\"] == \"ups_serial\" or r[\"_field\"] == \"firmware\")\r\n  |> drop(columns: [\"host\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")\r\n",
           "refId": "A"
         }
       ],
@@ -550,6 +583,7 @@
               "ups_type": 0,
               "ups_vendorid": 10
             },
+            "orderByMode": "manual",
             "renameByName": {
               "device_type": "Device Type",
               "driver_version": "Driver version",
@@ -584,7 +618,7 @@
             "steps": [
               {
                 "color": "#009999",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -645,14 +679,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_power\" or r[\"_field\"] == \"ups_power_nominal\")\r\n  |> drop(columns: [\"host\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_power\" or r[\"_field\"] == \"ups_power_nominal\")\r\n  |> drop(columns: [\"host\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -713,24 +747,36 @@
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
       },
+      "description": "##### Input Voltage (V)\n\n| Nominal | Min   | Max   |\n|---------|-------|-------|\n| 230 V   | 190 V | 270 V |\n\n| Zone            | Threshold (V) | Color                                |\n|-----------------|---------------|--------------------------------------|\n| Critical Low    | <200          | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low     | 200 – 207     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal          | 207 – 253     | <span style=\"color:#299c46;\">● dark-green</span> |\n| Warning High    | 253 – 260     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High   | >260          | <span style=\"color:#e02f44;\">● dark-red</span> |\n",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "neutral": 230
+          },
           "mappings": [],
           "max": 270,
-          "min": 210,
+          "min": 190,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-green",
-                "value": null
+                "color": "dark-red",
+                "value": 0
               },
               {
                 "color": "dark-yellow",
-                "value": 250
+                "value": 200
+              },
+              {
+                "color": "dark-green",
+                "value": 207
+              },
+              {
+                "color": "dark-yellow",
+                "value": 253
               },
               {
                 "color": "dark-red",
@@ -766,14 +812,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -792,28 +838,40 @@
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
       },
+      "description": "##### Input Frequency (Hz)\n\n| Nominal | Min  | Max  |\n|---------|------|------|\n| 50 Hz   | 40 Hz| 60 Hz|\n\n| Zone            | Threshold (Hz) | Color                                |\n|-----------------|----------------|--------------------------------------|\n| Critical Low    | <47            | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low     | 47 – 49        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal          | 49 – 51        | <span style=\"color:#299c46;\">● dark-green</span> |\n| Warning High    | 51 – 53        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High   | >53            | <span style=\"color:#e02f44;\">● dark-red</span> |\n",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "neutral": 50
+          },
           "mappings": [],
-          "max": 59,
+          "max": 60,
           "min": 40,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-green",
-                "value": null
+                "color": "dark-red",
+                "value": 0
               },
               {
                 "color": "dark-yellow",
-                "value": 54
+                "value": 47
+              },
+              {
+                "color": "dark-green",
+                "value": 49
+              },
+              {
+                "color": "dark-yellow",
+                "value": 51
               },
               {
                 "color": "dark-red",
-                "value": 56
+                "value": 53
               }
             ]
           },
@@ -845,14 +903,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -871,28 +929,48 @@
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
       },
+      "description": "##### Output Voltage (V)\n\n| Nominal | Min   | Max   |\n|---------|-------|-------|\n| 230 V   | 190 V | 270 V |\n\n| Zone                  | Threshold (V) | Color                                |\n|-----------------------|---------------|--------------------------------------|\n| Critical Low          | <200          | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low           | 200 – 207     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal (General)      | 207 – 253     | <span style=\"color:#299c46;\">● dark-green</span> |\n| Normal (Online ±2%)   | 225 – 235     | <span style=\"color:#66cc66;\">● green</span> |\n| Warning High          | 253 – 260     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High         | >260          | <span style=\"color:#e02f44;\">● dark-red</span> |\n",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "neutral": 230
+          },
           "mappings": [],
-          "max": 250,
-          "min": 210,
+          "max": 270,
+          "min": 190,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-green",
-                "value": null
+                "color": "dark-red",
+                "value": 0
               },
               {
                 "color": "dark-yellow",
+                "value": 200
+              },
+              {
+                "color": "dark-green",
+                "value": 207
+              },
+              {
+                "color": "green",
+                "value": 225
+              },
+              {
+                "color": "dark-green",
                 "value": 235
               },
               {
+                "color": "dark-yellow",
+                "value": 253
+              },
+              {
                 "color": "dark-red",
-                "value": 240
+                "value": 260
               }
             ]
           },
@@ -924,14 +1002,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -950,28 +1028,48 @@
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
       },
+      "description": "##### Output Frequency (Hz)\n\n| Nominal | Min  | Max  |\n|---------|------|------|\n| 50 Hz   | 40 Hz| 60 Hz|\n\n| Zone                   | Threshold (Hz) | Color                                |\n|------------------------|----------------|--------------------------------------|\n| Critical Low           | <47            | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low            | 47 – 49        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal (General)       | 49 – 51        | <span style=\"color:#299c46;\">● dark-green</span> |\n| Normal (Online ±0.1 Hz)| 49.9 – 50.1    | <span style=\"color:#66cc66;\">● green</span> |\n| Warning High           | 51 – 53        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High          | >53            | <span style=\"color:#e02f44;\">● dark-red</span> |\n",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "neutral": 50
+          },
           "mappings": [],
-          "max": 59,
+          "max": 60,
           "min": 40,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-green",
-                "value": null
+                "color": "dark-red",
+                "value": 0
               },
               {
                 "color": "dark-yellow",
-                "value": 54
+                "value": 47
+              },
+              {
+                "color": "dark-green",
+                "value": 49
+              },
+              {
+                "color": "green",
+                "value": 49.9
+              },
+              {
+                "color": "dark-green",
+                "value": 50.1
+              },
+              {
+                "color": "dark-yellow",
+                "value": 51
               },
               {
                 "color": "dark-red",
-                "value": 56
+                "value": 53
               }
             ]
           },
@@ -1003,14 +1101,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1042,7 +1140,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-yellow",
@@ -1082,7 +1180,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1144,7 +1242,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-yellow",
@@ -1184,7 +1282,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1251,7 +1349,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-yellow",
@@ -1291,14 +1389,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"load_percent\")  \r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1309,13 +1407,14 @@
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true,
+              "Time": false,
               "ups_load": false,
               "ups_realpower_nominal": false
             },
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
+              "load_percent Eaton9E2000i": "UPS Load %",
               "load_percent {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Load %",
               "load_percent {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Load %",
               "load_percent {status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Load %",
@@ -1350,7 +1449,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-yellow",
@@ -1390,14 +1489,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"internal_temp\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"internal_temp\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1407,10 +1506,13 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": false
+            },
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
+              "internal_temp Eaton9E2000i": "UPS Temp",
               "internal_temp {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Temp",
               "internal_temp {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Temp",
               "internal_temp {status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Temp",
@@ -1440,15 +1542,19 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "orange",
                 "value": 20
               },
               {
-                "color": "green",
+                "color": "yellow",
                 "value": 50
+              },
+              {
+                "color": "green",
+                "value": 80
               }
             ]
           },
@@ -1487,14 +1593,14 @@
         "sizing": "manual",
         "valueMode": "color"
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charge_percent\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -1524,15 +1630,19 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "orange",
                 "value": 1500
               },
               {
+                "color": "yellow",
+                "value": 2100
+              },
+              {
                 "color": "green",
-                "value": 2500
+                "value": 2700
               }
             ]
           },
@@ -1581,14 +1691,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"time_left_ns\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])  \r\n  |> map(fn: (r) => ({ r with _value: r._value / 1000000000 }))\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")\r\n",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"time_left_ns\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])  \r\n  |> map(fn: (r) => ({ r with _value: r._value / 1000000000 }))\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")\r\n",
           "refId": "A"
         }
       ],
@@ -1619,7 +1729,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-yellow",
@@ -1659,7 +1769,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1766,7 +1876,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -1810,7 +1920,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -1892,7 +2002,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "orange",
@@ -1932,7 +2042,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -2029,7 +2139,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2062,14 +2172,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_result\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_result\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2131,7 +2241,7 @@
             "steps": [
               {
                 "color": "semi-dark-green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2164,14 +2274,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_high\" or r[\"_field\"] == \"input_transfer_low\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()  \r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_high\" or r[\"_field\"] == \"input_transfer_low\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()  \r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2214,7 +2324,7 @@
             "steps": [
               {
                 "color": "semi-dark-green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2247,14 +2357,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_bypass_high\" or r[\"_field\"] == \"input_transfer_bypass_low\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_bypass_high\" or r[\"_field\"] == \"input_transfer_bypass_low\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2299,7 +2409,7 @@
             "steps": [
               {
                 "color": "semi-dark-green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2332,14 +2442,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_eco_high\" or r[\"_field\"] == \"input_transfer_eco_low\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_eco_high\" or r[\"_field\"] == \"input_transfer_eco_low\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2390,7 +2500,7 @@
             "steps": [
               {
                 "color": "#009999",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2423,14 +2533,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_capacity\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_capacity\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2447,8 +2557,10 @@
             "excludeByName": {},
             "includeByName": {},
             "indexByName": {},
+            "orderByMode": "manual",
             "renameByName": {
               "battery_capacity": "Batt Capacity (Ah)",
+              "battery_capacity Eaton9E2000i": "Batt Capacity (Ah)",
               "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
               "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
               "battery_capacity {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
@@ -2499,7 +2611,7 @@
             "steps": [
               {
                 "color": "#009999",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2532,14 +2644,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_type\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_type\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2556,12 +2668,14 @@
             "excludeByName": {},
             "includeByName": {},
             "indexByName": {},
+            "orderByMode": "manual",
             "renameByName": {
               "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", driver_version=\"2.8.0\", driver_version_data=\"MGE HID 1.46\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Battery Capacity (Ah)",
               "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
               "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
               "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
               "battery_type": "Battery Type",
+              "battery_type Eaton9E2000i": "Battery Type",
               "battery_type {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Type",
               "battery_type {status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Type"
             }
@@ -2598,7 +2712,7 @@
             "steps": [
               {
                 "color": "#009999",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2634,14 +2748,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_battery_voltage\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"nominal_battery_voltage\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2661,9 +2775,11 @@
               "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
               "battery_type {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Type",
               "battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "nominal_battery_voltage Eaton9E2000i": "Battery Voltage Nominal",
               "nominal_battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
               "nominal_battery_voltage {model=\"9E2000i (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "",
               "nominal_battery_voltage {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "nominal_battery_voltage {status_OB=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
               "nominal_battery_voltage {status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal"
             }
           }
@@ -2705,7 +2821,7 @@
             "steps": [
               {
                 "color": "#009999",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2731,21 +2847,21 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^Batt Protected$/",
+          "fields": "/^Battery Protection$/",
           "values": false
         },
         "showPercentChange": false,
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_protection\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_protection\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2767,6 +2883,7 @@
               "battery_capacity {device_mfr=\"Eaton\", device_model=\"unknown 2000\", device_type=\"ups\", ups_mfr=\"Eaton\", ups_model=\"unknown 2000\", ups_productid=\"ffff\", ups_vendorid=\"0463\"}": "Batt Capacity (Ah)",
               "battery_capacity {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Capacity (Ah)",
               "battery_protection": "Batt Protected",
+              "battery_protection Eaton9E2000i": "Battery Protection",
               "battery_protection {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
               "battery_protection {model=\"9E2000i (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "",
               "battery_protection {model=\"unknown 2000\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Batt Protected",
@@ -2794,7 +2911,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2828,14 +2945,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_interval\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_test_interval\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2904,7 +3021,7 @@
             "steps": [
               {
                 "color": "#009999",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2937,14 +3054,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_shutdown\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"ups_shutdown\")\r\n  |> drop(columns: [\"serial\",\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -2967,6 +3084,7 @@
               "nominal_battery_voltage {model=\"9E2000 (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
               "nominal_battery_voltage {model=\"9E2000i (presumed)\", serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "",
               "nominal_battery_voltage {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "Battery Voltage Nominal",
+              "ups_shutdown Eaton9E2000i": "UPS Shutdown",
               "ups_shutdown {serial=\"<nil>\", status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Shutdown",
               "ups_shutdown {status_OL=\"true\", ups_name=\"Eaton9E2000i\"}": "UPS Shutdown"
             }
@@ -2988,7 +3106,7 @@
             "steps": [
               {
                 "color": "semi-dark-green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -3021,14 +3139,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_frequency_bypass_range\" or r[\"_field\"] == \"input_transfer_frequency_eco_range\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_frequency_bypass_range\" or r[\"_field\"] == \"input_transfer_frequency_eco_range\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -3065,7 +3183,7 @@
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
       },
-      "description": "Bypass Off = Inverter (On/Off)  \nBypass On = Auto Bypass (On/Off)",
+      "description": "Bypass Off - Take the UPS out of Bypass mode [Inverter (On/Off)].\n\nBypass On - Put the UPS in Bypass mode [Auto Bypass (On/Off)].",
       "fieldConfig": {
         "defaults": {
           "mappings": [
@@ -3090,7 +3208,7 @@
             "steps": [
               {
                 "color": "semi-dark-green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -3152,14 +3270,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_bypass_switch_off\" or r[\"_field\"] == \"input_bypass_switch_on\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_bypass_switch_off\" or r[\"_field\"] == \"input_bypass_switch_on\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -3200,6 +3318,7 @@
         "type": "influxdb",
         "uid": "${DS_INFLUXDBV2}"
       },
+      "description": "Input ECO Switch - Input High Efficiency (aka ECO) mode switch.\n\nInput Bypass Forced - Rule for allow auto Bypass switch (on/off) transfer modes (enabled or disabled).",
       "fieldConfig": {
         "defaults": {
           "mappings": [
@@ -3237,7 +3356,7 @@
             "steps": [
               {
                 "color": "semi-dark-green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -3270,14 +3389,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_bypass_forced\" or r[\"_field\"] == \"input_eco_switchable\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_transfer_bypass_forced\" or r[\"_field\"] == \"input_eco_switchable\")\r\n  |> drop(columns: [\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -3326,6 +3445,124 @@
           "mappings": [
             {
               "options": {
+                "pattern": ".*:(ECO)\\b",
+                "result": {
+                  "color": "dark-blue",
+                  "index": 0,
+                  "text": " ECO "
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": ".*:(normal)\\b",
+                "result": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "Normal"
+                }
+              },
+              "type": "regex"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#009999",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "string"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 12,
+        "y": 16
+      },
+      "hideTimeOverride": true,
+      "id": 56,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Ups Mode Buzzwords$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"experimental_ups_mode_buzzwords\")\r\n  |> drop(columns: [\"serial\",\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1h",
+      "title": "Ups Mode",
+      "transformations": [
+        {
+          "disabled": true,
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "battery_charger_type": 2,
+              "input_transfer_forced": 1
+            },
+            "renameByName": {
+              "battery_charger_type": "Charger Type",
+              "battery_charger_type {model=\"9E2000i\", ups_name=\"Eaton9E2000i\"}": "Charger Type",
+              "experimental_ups_mode_buzzwords {model=\"9E2000i\", ups_name=\"Eaton9E2000i\"}": "Ups Mode Buzzwords",
+              "input_eco_switchable": "Input ECO Switch",
+              "input_transfer_bypass_high": "High",
+              "input_transfer_bypass_low": "Low",
+              "input_transfer_eco_high": "High",
+              "input_transfer_eco_low": "Low",
+              "input_transfer_forced": "Input Transfer Forced",
+              "input_transfer_high": "High",
+              "input_transfer_low": "Low"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "options": {
                 "ABM": {
                   "index": 0,
                   "text": "    ABM    "
@@ -3339,7 +3576,7 @@
             "steps": [
               {
                 "color": "#009999",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -3350,7 +3587,7 @@
       "gridPos": {
         "h": 3,
         "w": 3,
-        "x": 12,
+        "x": 15,
         "y": 16
       },
       "hideTimeOverride": true,
@@ -3372,14 +3609,14 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "${DS_INFLUXDBV2}"
           },
-          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charger_type\")\r\n  |> drop(columns: [\"serial\",\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
+          "query": "from(bucket: \"${bucket}\")\r\n  //|> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"battery_charger_type\")\r\n  |> drop(columns: [\"serial\",\"host\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  //|> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> last()\r\n  |> yield(name: \"last\")",
           "refId": "A"
         }
       ],
@@ -3486,7 +3723,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -3574,7 +3811,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -3712,7 +3949,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -3788,7 +4025,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -3906,7 +4143,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -3990,7 +4227,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -4040,6 +4277,7 @@
             "mode": "fixed"
           },
           "custom": {
+            "axisPlacement": "auto",
             "fillOpacity": 70,
             "hideFrom": {
               "legend": false,
@@ -4056,87 +4294,52 @@
               "options": {
                 "ALARM OB ECO": {
                   "color": "semi-dark-orange",
-                  "index": 25,
+                  "index": 15,
                   "text": "OnBatteryECO"
-                },
-                "ALARM OL BYPASS": {
-                  "color": "blue",
-                  "index": 17,
-                  "text": "OnBypass"
-                },
-                "ALARM OL ECO": {
-                  "color": "dark-blue",
-                  "index": 24,
-                  "text": "  OnECO  "
                 },
                 "BOOST": {
                   "color": "purple",
-                  "index": 9,
+                  "index": 7,
                   "text": "SmartBoost"
-                },
-                "BYPASS": {
-                  "color": "blue",
-                  "index": 11,
-                  "text": "OnBypass"
                 },
                 "CAL": {
                   "color": "purple",
-                  "index": 4,
+                  "index": 2,
                   "text": "Calibration"
                 },
                 "CHRG": {
                   "color": "purple",
-                  "index": 12,
+                  "index": 9,
                   "text": "Charging"
                 },
                 "DISCHRG": {
                   "color": "purple",
-                  "index": 13,
+                  "index": 10,
                   "text": "Discharging"
                 },
-                "ECO": {
-                  "color": "dark-blue",
-                  "index": 22,
-                  "text": "  OnECO  "
-                },
-                "FSD OB": {
+                "FSD OB DISCHRG": {
                   "color": "dark-yellow",
-                  "index": 14,
-                  "text": "ShutDownBatt"
-                },
-                "FSD OB ECO": {
-                  "color": "dark-yellow",
-                  "index": 15,
-                  "text": "ShutDownBattECO"
+                  "index": 11,
+                  "text": "ShutDownBattDischarge"
                 },
                 "FSD OL": {
                   "color": "dark-yellow",
-                  "index": 21,
-                  "text": "OnShutDown"
+                  "index": 14,
+                  "text": "ShutDownOn"
+                },
+                "FSD OL CHRG": {
+                  "color": "dark-yellow",
+                  "index": 12,
+                  "text": "ShutDownOnCharge"
                 },
                 "LB": {
                   "color": "orange",
-                  "index": 6,
+                  "index": 4,
                   "text": "LowBattery"
-                },
-                "OB": {
-                  "color": "semi-dark-orange",
-                  "index": 1,
-                  "text": "OnBattery"
-                },
-                "OB DISCHRG ECO": {
-                  "color": "semi-dark-orange",
-                  "index": 3,
-                  "text": "OnBattDischargeECO"
-                },
-                "OB ECO": {
-                  "color": "semi-dark-orange",
-                  "index": 2,
-                  "text": "OnBatteryECO"
                 },
                 "OFF": {
                   "color": "dark-red",
-                  "index": 10,
+                  "index": 8,
                   "text": "   Off    "
                 },
                 "OL": {
@@ -4144,48 +4347,99 @@
                   "index": 0,
                   "text": "  OnLine  "
                 },
-                "OL BYPASS": {
-                  "color": "blue",
-                  "index": 16,
-                  "text": "OnBypass"
-                },
-                "OL CHRG": {
-                  "color": "dark-green",
-                  "index": 18,
-                  "text": "OnCharging"
-                },
-                "OL CHRG ECO": {
-                  "color": "dark-green",
-                  "index": 19,
-                  "text": "OnChargeECO"
-                },
-                "OL ECO": {
-                  "color": "dark-blue",
-                  "index": 23,
-                  "text": "  OnECO  "
+                "OL DISCHRG": {
+                  "color": "super-light-purple",
+                  "index": 1,
+                  "text": "OnDischarge"
                 },
                 "OVER": {
                   "color": "yellow",
-                  "index": 5,
+                  "index": 3,
                   "text": "Overload"
                 },
                 "OVER BYPASS": {
                   "color": "super-light-yellow",
-                  "index": 20,
+                  "index": 13,
                   "text": "OverBypass"
                 },
                 "RB": {
                   "color": "red",
-                  "index": 7,
+                  "index": 5,
                   "text": "ReplaceBatt"
                 },
                 "TRIM": {
                   "color": "purple",
-                  "index": 8,
+                  "index": 6,
                   "text": "SmartTrim"
                 }
               },
               "type": "value"
+            },
+            {
+              "options": {
+                "pattern": "^(ECO|OL ECO|ALARM OL ECO)$",
+                "result": {
+                  "color": "dark-blue",
+                  "index": 16,
+                  "text": "  OnECO  "
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^FSD OB(?: (ECO))?$",
+                "result": {
+                  "color": "dark-yellow",
+                  "index": 17,
+                  "text": "ShutDownBatt$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^OB(?: (ECO))?$",
+                "result": {
+                  "color": "semi-dark-orange",
+                  "index": 18,
+                  "text": "OnBattery$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^OB DISCHRG(?: (ECO))?$",
+                "result": {
+                  "color": "semi-dark-orange",
+                  "index": 19,
+                  "text": "OnBattDischarge$1"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": ".*BYPASS.*",
+                "result": {
+                  "color": "blue",
+                  "index": 20,
+                  "text": "OnBypass"
+                }
+              },
+              "type": "regex"
+            },
+            {
+              "options": {
+                "pattern": "^OL CHRG(?: (ECO))?$",
+                "result": {
+                  "color": "dark-green",
+                  "index": 21,
+                  "text": "OnCharge$1"
+                }
+              },
+              "type": "regex"
             }
           ],
           "thresholds": {
@@ -4193,7 +4447,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4226,7 +4480,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -4288,7 +4542,7 @@
             "axisColorMode": "series",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMax": 90,
+            "axisSoftMax": 100,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -4316,13 +4570,14 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "orange",
@@ -4372,16 +4627,28 @@
                   "mode": "absolute",
                   "steps": [
                     {
-                      "color": "red",
-                      "value": null
+                      "color": "dark-red",
+                      "value": 0
                     },
                     {
-                      "color": "orange",
+                      "color": "dark-yellow",
+                      "value": 60
+                    },
+                    {
+                      "color": "semi-dark-blue",
                       "value": 72
                     },
                     {
-                      "color": "blue",
-                      "value": 75
+                      "color": "light-blue",
+                      "value": 83
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 85
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 90
                     }
                   ]
                 }
@@ -4406,12 +4673,11 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -4449,12 +4715,424 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "description": "##### Input/Output Voltage (V)\n\n| Nominal | Min   | Max   |\n|---------|-------|-------|\n| 230 V   | 190 V | 270 V |\n\n| Zone            | Threshold (V) | Color                                |\n|-----------------|---------------|--------------------------------------|\n| Critical Low    | <200          | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low     | 200 – 207     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal          | 207 – 253     | <span style=\"color:#009999;\">● teal</span> |\n| Warning High    | 253 – 260     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High   | >260          | <span style=\"color:#e02f44;\">● dark-red</span> |\n\n| Zone                  | Threshold (V) | Color                                |\n|-----------------------|---------------|--------------------------------------|\n| Critical Low          | <200          | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low           | 200 – 207     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal (General)      | 207 – 253     | <span style=\"color:#1f60c4;\">● dark-blue</span> |\n| Normal (Online ±2%)   | 225 – 235     | <span style=\"color:#5794f2;\">● blue</span> |\n| Warning High          | 253 – 260     | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High         | >260          | <span style=\"color:#e02f44;\">● dark-red</span> |\n",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-yellow",
+                "value": 200
+              },
+              {
+                "color": "#009999",
+                "value": 207
+              },
+              {
+                "color": "dark-yellow",
+                "value": 253
+              },
+              {
+                "color": "dark-red",
+                "value": 260
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Input (V)"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Output (V)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "thresholds",
+                  "seriesBy": "last"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "dark-red",
+                      "value": 0
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 200
+                    },
+                    {
+                      "color": "#1F60C4",
+                      "value": 207
+                    },
+                    {
+                      "color": "#5794F2",
+                      "value": 225
+                    },
+                    {
+                      "color": "dark-blue",
+                      "value": 235
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 253
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 260
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 57,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "min",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_voltage\" or r[\"_field\"] == \"output_voltage\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Voltage",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "real_power": 2,
+              "ups_power": 1
+            },
+            "renameByName": {
+              "Time": "",
+              "input_voltage": "Input (V)",
+              "output_voltage": "Output (V)",
+              "real_power": "UPS Real Power",
+              "ups_load": "UPS Load",
+              "ups_power": "UPS Power",
+              "ups_realpower": "UPS Real Power",
+              "watts": "Watts"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDBV2}"
+      },
+      "description": "##### Input/Output Frequency (Hz)\n\n| Nominal | Min  | Max  |\n|---------|------|------|\n| 50 Hz   | 40 Hz| 60 Hz|\n\n| Zone            | Threshold (Hz) | Color                                |\n|-----------------|----------------|--------------------------------------|\n| Critical Low    | <47            | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low     | 47 – 49        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal          | 49 – 51        | <span style=\"color:#009999;\">● teal</span> |\n| Warning High    | 51 – 53        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High   | >53            | <span style=\"color:#e02f44;\">● dark-red</span> |\n\n| Zone                   | Threshold (Hz) | Color                                |\n|------------------------|----------------|--------------------------------------|\n| Critical Low           | <47            | <span style=\"color:#e02f44;\">● dark-red</span> |\n| Warning Low            | 47 – 49        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Normal (General)       | 49 – 51        | <span style=\"color:#1f60c4;\">● dark-blue</span> |\n| Normal (Online ±0.1 Hz)| 49.9 – 50.1    | <span style=\"color:#5794f2;\">● blue</span> |\n| Warning High           | 51 – 53        | <span style=\"color:#e0b400;\">● dark-yellow</span> |\n| Critical High          | >53            | <span style=\"color:#e02f44;\">● dark-red</span> |\n",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-yellow",
+                "value": 47
+              },
+              {
+                "color": "#009999",
+                "value": 49
+              },
+              {
+                "color": "dark-yellow",
+                "value": 51
+              },
+              {
+                "color": "dark-red",
+                "value": 53
+              }
+            ]
+          },
+          "unit": "hertz"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "output_frequency"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "dark-red",
+                      "value": 0
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 47
+                    },
+                    {
+                      "color": "dark-blue",
+                      "value": 49
+                    },
+                    {
+                      "color": "blue",
+                      "value": 49.9
+                    },
+                    {
+                      "color": "dark-blue",
+                      "value": 50.1
+                    },
+                    {
+                      "color": "dark-yellow",
+                      "value": 51
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 53
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 58,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last",
+            "min",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDBV2}"
+          },
+          "query": "from(bucket: \"${bucket}\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"upsd\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"input_frequency\" or r[\"_field\"] == \"output_frequency\")\r\n  |> drop(columns: [\"host\",\"model\",\"driver_version\",\"driver_version_data\",\"status_OL\",\"status_OB\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> yield(name: \"last\")",
+          "refId": "A"
+        }
+      ],
+      "title": "UPS Frequency",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "real_power": 2,
+              "ups_power": 1
+            },
+            "renameByName": {
+              "Time": "",
+              "input_frequency": "Input (Hz)",
+              "input_voltage": "Input Voltage",
+              "output_frequency": "Output (Hz)",
+              "output_voltage": "Output Voltage",
+              "real_power": "UPS Real Power",
+              "ups_load": "UPS Load",
+              "ups_power": "UPS Power",
+              "ups_realpower": "UPS Real Power",
+              "watts": "Watts"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 43
       },
       "id": 44,
       "panels": [],
@@ -4499,7 +5177,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -4558,7 +5236,7 @@
         "h": 9,
         "w": 21,
         "x": 0,
-        "y": 39
+        "y": 44
       },
       "id": 43,
       "interval": "1h",
@@ -4584,7 +5262,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -4670,7 +5348,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -4725,7 +5403,7 @@
         "h": 9,
         "w": 3,
         "x": 21,
-        "y": 39
+        "y": 44
       },
       "hideTimeOverride": true,
       "id": 45,
@@ -4747,7 +5425,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -4845,7 +5523,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -4904,7 +5582,7 @@
         "h": 9,
         "w": 21,
         "x": 0,
-        "y": 48
+        "y": 53
       },
       "id": 46,
       "interval": "1d",
@@ -4930,7 +5608,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -5007,7 +5685,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -5062,7 +5740,7 @@
         "h": 9,
         "w": 3,
         "x": 21,
-        "y": 48
+        "y": 53
       },
       "hideTimeOverride": true,
       "id": 48,
@@ -5084,7 +5762,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -5182,7 +5860,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -5241,7 +5919,7 @@
         "h": 9,
         "w": 21,
         "x": 0,
-        "y": 57
+        "y": 62
       },
       "id": 47,
       "interval": "1d",
@@ -5267,7 +5945,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 100
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -5344,7 +6022,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -5399,7 +6077,7 @@
         "h": 9,
         "w": 3,
         "x": 21,
-        "y": 57
+        "y": 62
       },
       "hideTimeOverride": true,
       "id": 49,
@@ -5421,7 +6099,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -5519,7 +6197,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -5578,7 +6256,7 @@
         "h": 9,
         "w": 21,
         "x": 0,
-        "y": 66
+        "y": 71
       },
       "hideTimeOverride": false,
       "id": 50,
@@ -5605,7 +6283,7 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -5682,7 +6360,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -5737,7 +6415,7 @@
         "h": 9,
         "w": 3,
         "x": 21,
-        "y": 66
+        "y": 71
       },
       "hideTimeOverride": true,
       "id": 51,
@@ -5759,7 +6437,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": {
@@ -5821,7 +6499,7 @@
     }
   ],
   "refresh": "15s",
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "tags": [
     "nas server",
     "ups",
@@ -5944,6 +6622,6 @@
   "timezone": "",
   "title": "NUT UPS Telegraf",
   "uid": "be91afa6vvk",
-  "version": 143,
+  "version": 193,
   "weekStart": ""
 }
